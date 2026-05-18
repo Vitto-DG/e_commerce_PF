@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
       ${query ? `&query=${query}`: ''}`: null;
 
     res.json({
-      status:'succes',
+      status:'success',
       payload: result.docs,
       totalPages: result.prevPage,
       prevPage: result.prevPage,
@@ -63,7 +63,7 @@ router.get('/:pid', async (req, res) => {
     const product = await productModel.findById(pid);
     if (!product) return res.status(404).json({ status: 'error', message: 'Producto no encontrado.'});
 
-    res,json({ status: 'succes', payload: product });
+    res,json({ status: 'success', payload: product });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });
   }
@@ -85,7 +85,7 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ status: 'error', message: 'Faltan campos obigatorios.' });
     }
 
-    res.status(201).json({ status: 'sucess', payload: newProduct });
+    res.status(201).json({ status: 'success', payload: newProduct });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message });
   }
@@ -101,8 +101,24 @@ router.put('/:pid', async (req, res) => {
     const updateProduct = await productModel.findByIdAndUpdate(pid, updateData, { new: true });
     if (!updateProduct) return res.status(404).json({ status: 'error', message: 'Producto no encontrado.'});
 
-    res.json({ status: 'sucess', payload: updateProduct });
+    res.json({ status: 'success', payload: updateProduct });
   } catch (error) {
     res.status(500).json({ status: 'error', message: error.message});
   }
 });
+
+
+router.delete('/:pid', async (req, res) => {
+  try {
+    const { pid } = req.params;
+    const deleteProduct = await productModel.findById(pid);
+    if (!deleteProduct) return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
+
+    res.json({ status: 'success', message: 'Producto eliminado correctamente', payload: deleteProduct });
+
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message })
+  }
+});
+
+export default router;
